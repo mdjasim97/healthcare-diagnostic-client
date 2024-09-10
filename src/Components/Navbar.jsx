@@ -1,23 +1,28 @@
 import { Link } from "react-router-dom";
+import useAuth from "../hooks/useAuth";
 
 
 const Navbar = () => {
+
+    const { user, logOut } = useAuth()
+
+
+    const signOut = () => {
+        logOut()
+    }
 
 
     const navbarOptions = <>
 
         {/* Public route  */}
         <li><Link to="/">Home</Link></li>
-        <li><Link to="/services">Server</Link></li>
-        <li><Link to="/Booking">Booking</Link></li>
-        <li><Link to="/signup">SignUp</Link></li>
-        <li><Link to="/signIn">SignIn</Link></li>
+        <li><Link to="/services">Service</Link></li>
     </>
 
 
     return (
         <div>
-            <div className="navbar z-10 bg-orange-700 text-white max-w-screen-xl">
+            <div className="navbar z-10 bg-orange-700  max-w-screen-xl">
                 <div className="navbar-start">
                     <div className="dropdown">
                         <label tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
@@ -37,7 +42,24 @@ const Navbar = () => {
                     </ul>
                 </div>
                 <div className="navbar-end">
-                    <a className="btn bg-orange-600 text-white">Go to dashboard</a>
+                    <div className="dropdown dropdown-end">
+                        <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
+                            <div className="w-10 rounded-full">
+                                <img
+                                    alt="Tailwind CSS Navbar component"
+                                    src={user ? user.photoURL : "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"} />
+                            </div>
+                        </div>
+                        <ul
+                            tabIndex={0}
+                            className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
+                            <li><Link to='/signup'>Sign Up</Link></li>
+                            <li><Link onClick={signOut}>Logout</Link></li>
+                        </ul>
+                    </div>
+                    {
+                        user && <Link to='/dashboard' className="btn bg-orange-600 ml-2 text-white">Go to Dashboard</Link>
+                    }
                 </div>
             </div>
         </div>

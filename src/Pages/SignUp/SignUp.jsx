@@ -3,6 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2'
 import axios from 'axios'
 import useAuth from './../../hooks/useAuth';
+import useAxiosPublic from './../../hooks/useAxiosPublic';
+import signUp from '../../assets/signup/wellcome.jpg'
 
 const SignUp = () => {
 
@@ -10,8 +12,11 @@ const SignUp = () => {
     const [distric, setDistric] = useState(" ")
     const [upazila, setUpazila] = useState(" ")
 
+
     const { userCreate, userProfileUpdate, loading } = useAuth()
     const navigate = useNavigate()
+    const { user } = useAuth()
+    const axiosPublic = useAxiosPublic()
 
 
     const selectBlood = (e) => {
@@ -40,12 +45,8 @@ const SignUp = () => {
         const user_upazila = upazila
         const image = form.image.files[0]
 
-        const userInfo = { user_name, user_email, user_password, user_confirmPassword, image, blood_group, user_distric, user_upazila }
-
         const formData = new FormData()
         formData.append('image', image)
-
-        console.log(userInfo)
 
         if (user_password === user_confirmPassword) {
 
@@ -54,12 +55,30 @@ const SignUp = () => {
                 const { data } = await axios.post(`https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_IMGBB_API_KEY}`, formData)
                 console.log(data.data.display_url)
 
+
                 // 2. User create 
-                const result = await userCreate(user_email, user_password)
-                console.log(result)
+                await userCreate(user_email, user_password)
 
                 // 3. User profile update
                 await userProfileUpdate(user_name, data.data.display_url)
+
+                // 4. user data store in database
+                const userInfoDoc = {
+                    user_name :  user_name,
+                    user_email : user_email,
+                    user_password : user_password,
+                    user_profile : user.photoURL,
+                    user_blood : blood_group,
+                    disctric :  user_distric,
+                    upazila : user_upazila,
+                    status : 'active'
+                }
+                
+
+                await axiosPublic.post('/users', userInfoDoc)
+                .then(res => {
+                    res.data
+                })
 
                 navigate('/')
                 Swal.fire({
@@ -69,6 +88,8 @@ const SignUp = () => {
                     showConfirmButton: false,
                     timer: 1500
                 });
+
+
 
             } catch (error) {
                 console.log(error.message)
@@ -85,13 +106,18 @@ const SignUp = () => {
     }
 
 
+    const previousPage = () => {
+        navigate(-1)
+    }
+
+
 
     return (
         <div>
-            <div className="bg-base-200 h-[500px] my-10">
+            <div className="bg-base-200 my-10">
                 <div className="flex flex-col md:flex-row-reverse gap-10 p-16">
                     <div className="flex flex-col w-1/2 items-center justify-center">
-                        <img src='' alt="" className='' />
+                        <img src={signUp} alt="" className='w-full' />
                     </div>
 
                     <div className="w-1/2">
@@ -101,7 +127,7 @@ const SignUp = () => {
                             {/* User name and Email related input  */}
                             <div className="flex gap-6">
                                 {/* user name  */}
-                                <div className="form-control">
+                                <div className="form-control w-full">
                                     <label className="label">
                                         <span className="label-text">User Name</span>
                                     </label>
@@ -109,7 +135,7 @@ const SignUp = () => {
                                 </div>
 
                                 {/* user email  */}
-                                <div className="form-control">
+                                <div className="form-control w-full">
                                     <label className="label">
                                         <span className="label-text">Email</span>
                                     </label>
@@ -121,7 +147,10 @@ const SignUp = () => {
                             <div className="flex gap-6">
 
                                 {/* Profile Image */}
-                                <div className="form-control w-full my-6">
+                                <div className="form-control w-full">
+                                    <label className="label">
+                                        <span className="label-text">Profile picture</span>
+                                    </label>
                                     <input type="file" name='image' id='image' accept='image/*' className="file-input w-full max-w-xs" />
                                 </div>
 
@@ -132,7 +161,7 @@ const SignUp = () => {
                                     </label>
                                     <select onChange={selectBlood}
                                         className="select select-bordered w-full">
-                                        <option disabled value="default">Select blood group</option>
+                                        <option disabled selected value="default">Select blood group</option>
                                         <option value="A+">A+</option>
                                         <option value="A-">A-</option>
                                         <option value="B+">B+</option>
@@ -154,7 +183,7 @@ const SignUp = () => {
                                     </label>
                                     <select onChange={selectDistric}
                                         className="select select-bordered w-full">
-                                        <option disabled value="default">Select your distric</option>
+                                        <option selected disabled value="default">Select your distric</option>
                                         <option value="rajshahi">Rajshahi</option>
                                         <option value="chapainawabganj">Chapainawabganj</option>
                                         <option value="natore">Natore</option>
@@ -173,10 +202,8 @@ const SignUp = () => {
                                     </label>
                                     <select onChange={selectUpazila}
                                         className="select select-bordered w-full">
-                                        <option disabled value="default">Select Upazila</option>
-                                        <option value="bagha">Bagha Upazila</option>
+                                        <option disabled selected value="default">Select Upazila</option>
                                         <option value="bagmara">Bagmara</option>
-                                        <option value="charghat">Charghat</option>
                                         <option value="durgapur">Durgapur</option>
                                         <option value="godagari">Godagari</option>
                                         <option value="mohanpur">Mohanpur</option>
@@ -185,7 +212,6 @@ const SignUp = () => {
                                         <option value="tanore">Tanore</option>
                                         <option value="boalia">Boalia</option>
                                         <option value="matihar">Matihar</option>
-                                        <option value="rajpara">Rajpara</option>
                                         <option value="sibganj">Sibganj</option>
                                         <option value="nachole">Nachole</option>
                                         <option value="gomastapur">Gomastapur</option>
@@ -195,7 +221,7 @@ const SignUp = () => {
                             </div>
 
                             {/* Password ralated input input  */}
-                            <div className="flex gap-6">
+                            <div className="flex gap-6 w-full">
                                 {/* password  */}
                                 <div className="form-control">
                                     <label className="label">
@@ -206,7 +232,7 @@ const SignUp = () => {
                                 </div>
 
                                 {/* Confirm password  */}
-                                <div className="form-control">
+                                <div className="form-control w-full">
                                     <label className="label">
                                         <span className="label-text">Confirm Password</span>
                                     </label>
@@ -214,7 +240,7 @@ const SignUp = () => {
                                 </div>
                             </div>
 
-                            <button className="btn bg-[#d1a054b3] text-xl text-white">SignUp</button>
+                            <button className="btn bg-[#d1a054b3] my-6 text-xl text-white">SignUp</button>
 
                             <div className="form-control mt-6">
                                 <div className='text-[#d1a054b3] text-center text-xl space-y-1 mt-1'>

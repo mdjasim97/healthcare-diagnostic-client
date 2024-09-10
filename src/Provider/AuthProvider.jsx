@@ -1,12 +1,14 @@
 import { createContext, useEffect, useState } from "react";
 import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut, updateProfile } from 'firebase/auth';
 import auth from "../Firebase/Firebase.config";
+import useAxiosPublic from "../hooks/useAxiosPublic";
 
 export const AuthContext = createContext(null)
 const AuthProvider = ({ children }) => {
 
-    const [user, setUser] = useState([])
-    const [loading, setloading] = useState(true)
+    const [user, setUser] = useState('');
+    const [loading, setloading] = useState(true);
+    const axiosPublic = useAxiosPublic()
 
     // user create with email and password 
     const userCreate = (email, password) => {
@@ -18,8 +20,8 @@ const AuthProvider = ({ children }) => {
     const userProfileUpdate = (name, photo) => {
         setloading(true)
         return updateProfile(auth.currentUser, {
-            displayName : name,
-            photoURL : photo
+            displayName: name,
+            photoURL: photo
         })
     }
 
@@ -43,7 +45,18 @@ const AuthProvider = ({ children }) => {
         const unSubscribe = onAuthStateChanged(auth, (currentUser) => {
             setUser(currentUser)
             console.log('Currrent User', currentUser)
-            setloading(false)
+
+            if (currentUser) {
+                const userEmail = { email: currentUser.email }
+                axiosPublic.post('/jwt', userEmail)
+                    .then(res => {
+                        res.data
+                        console.log(res.data)
+                    })
+            }else{
+                
+            }
+
         })
 
         return () => {
@@ -58,7 +71,8 @@ const AuthProvider = ({ children }) => {
         userProfileUpdate,
         loading,
         userLogin,
-        logOut
+        logOut,
+        user
     }
 
 
