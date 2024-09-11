@@ -22,7 +22,7 @@ const Navbar = () => {
 
     return (
         <div>
-            <div className="navbar z-10 bg-orange-700  max-w-screen-xl">
+            <div className="navbar z-10 bg-orange-700 text-white font-bold text-2xl max-w-screen-xl">
                 <div className="navbar-start">
                     <div className="dropdown">
                         <label tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
@@ -52,9 +52,17 @@ const Navbar = () => {
                         </div>
                         <ul
                             tabIndex={0}
-                            className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
-                            <li><Link to='/signup'>Sign Up</Link></li>
-                            <li><Link onClick={signOut}>Logout</Link></li>
+                            className="menu menu-sm dropdown-content bg-orange-600 rounded-box z-[1] mt-3 w-52 p-2 shadow">
+
+                            {user ? <>
+                                <li><Link to='dashboard/userProfile'>Profile</Link></li>
+                                <li><Link onClick={signOut}>Logout</Link></li>
+                            </> : <>
+                                <li><Link to='signup'>Sign Up</Link></li>
+                                <li><Link to='/login'>Login</Link></li>
+                            </>
+                            }
+
                         </ul>
                     </div>
                     {

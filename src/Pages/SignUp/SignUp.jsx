@@ -64,21 +64,22 @@ const SignUp = () => {
 
                 // 4. user data store in database
                 const userInfoDoc = {
-                    user_name :  user_name,
-                    user_email : user_email,
-                    user_password : user_password,
-                    user_profile : user.photoURL,
-                    user_blood : blood_group,
-                    disctric :  user_distric,
-                    upazila : user_upazila,
-                    status : 'active'
+                    name: user_name,
+                    email: user_email,
+                    profile: user?.photoURL,
+                    blood: blood_group,
+                    disctric: user_distric,
+                    upazila: user_upazila,
+                    status: 'active',
                 }
-                
 
-                await axiosPublic.post('/users', userInfoDoc)
-                .then(res => {
-                    res.data
-                })
+                console.log(userInfoDoc)
+
+
+                await axiosPublic.put('/users', userInfoDoc)
+                    .then(res => {
+                        console.log(res.data)
+                    })
 
                 navigate('/')
                 Swal.fire({
@@ -88,9 +89,6 @@ const SignUp = () => {
                     showConfirmButton: false,
                     timer: 1500
                 });
-
-
-
             } catch (error) {
                 console.log(error.message)
             }

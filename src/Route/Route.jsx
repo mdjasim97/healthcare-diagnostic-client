@@ -8,6 +8,10 @@ import DashboardLayout from "../Layout/DashboardLayout";
 import UserProfile from "../Pages/Dashboard/UserProfile/UserProfile";
 import Appoinment from "../Pages/Dashboard/Appoinment/Appoinment";
 import TestResult from "../Pages/Dashboard/TestResult/TestResult";
+import BannarContent from "../Pages/Dashboard/BannerContent/BannarContent";
+import AllUsers from "../Pages/Dashboard/AdminDashboard/AllUsers/AllUsers";
+import AddTest from "../Pages/Dashboard/AdminDashboard/AddTest/AddTest";
+import AddBannar from "../Pages/Dashboard/AdminDashboard/AddBannar/AddBannar";
 
 const router = createBrowserRouter([
     {
@@ -47,7 +51,19 @@ const router = createBrowserRouter([
             {
                 path: 'testResult',
                 element: <TestResult />
-            }
+            },
+            {
+                path: 'addBannar',
+                element: <AddBannar />
+            }, 
+            {
+                path: 'allUsers',
+                element: <AllUsers />
+            }, 
+            {
+                path: 'addTest',
+                element: <AddTest />
+            }, 
         ]
     }
 ])
