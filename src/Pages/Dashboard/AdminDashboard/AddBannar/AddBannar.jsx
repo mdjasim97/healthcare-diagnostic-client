@@ -45,7 +45,7 @@ const AddBannar = () => {
             console.log(bannarText)
 
 
-            await axiosPublic.post('/addBannar', testData)
+            await axiosPublic.post('/addBannar', bannarText)
                 .then(res => {
                     console.log(res.data)
                 })
@@ -53,7 +53,7 @@ const AddBannar = () => {
             Swal.fire({
                 position: "top-end",
                 icon: "success",
-                title: "User Data has been saved",
+                title: "Data has been saved",
                 showConfirmButton: false,
                 timer: 1500
             });

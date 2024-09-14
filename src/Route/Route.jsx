@@ -8,10 +8,15 @@ import DashboardLayout from "../Layout/DashboardLayout";
 import UserProfile from "../Pages/Dashboard/UserProfile/UserProfile";
 import Appoinment from "../Pages/Dashboard/Appoinment/Appoinment";
 import TestResult from "../Pages/Dashboard/TestResult/TestResult";
-import BannarContent from "../Pages/Dashboard/BannerContent/BannarContent";
 import AllUsers from "../Pages/Dashboard/AdminDashboard/AllUsers/AllUsers";
 import AddTest from "../Pages/Dashboard/AdminDashboard/AddTest/AddTest";
 import AddBannar from "../Pages/Dashboard/AdminDashboard/AddBannar/AddBannar";
+import AllTest from "../Pages/Dashboard/AdminDashboard/AllTest/AllTest";
+import Reservation from "../Pages/Dashboard/AdminDashboard/Reservation/Reservation";
+import ServicePage from "../Pages/ServicesPage/ServicePage";
+import AdminRoute from './AdminRoute';
+import PrivateRoute from "./PrivateRoute";
+import ServicesDetails from '../Pages/ServiceDetails/ServicesDetails';
 
 const router = createBrowserRouter([
     {
@@ -22,7 +27,8 @@ const router = createBrowserRouter([
         children: [
             {
                 path: "/",
-                element: <HomePage></HomePage>
+                element: <HomePage></HomePage>,
+                loader: () => fetch('https://healthcare-diagnostic-server.vercel.app/doctorTipes')
             },
             {
                 path: "signup",
@@ -31,39 +37,72 @@ const router = createBrowserRouter([
             {
                 path: "login",
                 element: <SignIn></SignIn>
+            },
+            {
+                path: 'services',
+                element: <ServicePage />
+            },
+
+            {
+                path: 'services/:id',
+                element: <PrivateRoute><ServicesDetails /></PrivateRoute>,
+                loader: ({ params }) => fetch(`https://healthcare-diagnostic-server.vercel.app/alltest/${params.id}`)
             }
         ]
     },
     {
         path: '/dashboard',
-        element: <DashboardLayout />,
-
+        element: <PrivateRoute><DashboardLayout /></PrivateRoute>,
         children: [
             {
                 path: 'userProfile',
-                element: <UserProfile />
+                element: <PrivateRoute><UserProfile /></PrivateRoute>
             },
             {
                 path: 'appoinment/:email',
-                element: <Appoinment />,
-                loader: ({ params }) => fetch(`http://localhost:5000/users/${params.email}`, { credentials: true })
+                element: <Appoinment />
             },
             {
                 path: 'testResult',
-                element: <TestResult />
+                element: <PrivateRoute><TestResult /></PrivateRoute>
             },
+
+            // Admin related route
             {
                 path: 'addBannar',
-                element: <AddBannar />
-            }, 
+                element:
+                    <PrivateRoute>
+                        <AdminRoute>
+                            <AddBannar />
+                        </AdminRoute>
+                    </PrivateRoute>
+            },
             {
                 path: 'allUsers',
-                element: <AllUsers />
-            }, 
+                element:
+                    <PrivateRoute>
+                        <AdminRoute>
+                            <AllUsers />
+                        </AdminRoute>
+                    </PrivateRoute>
+            },
             {
                 path: 'addTest',
-                element: <AddTest />
-            }, 
+                element:
+                    <PrivateRoute>
+                        <AdminRoute>
+                            <AddTest />
+                        </AdminRoute>
+                    </PrivateRoute>
+            },
+            {
+                path: 'allTest',
+                element: <PrivateRoute><AllTest /></PrivateRoute>
+            },
+            {
+                path: 'reservation',
+                element: <Reservation />
+            },
         ]
     }
 ])

@@ -1,0 +1,62 @@
+[
+    {
+        "name": "Dr. Sarah Johnson",
+        "designation": "Cardiologist",
+        "advice": "Exercise regularly to maintain a healthy heart. Aim for at least 30 minutes of physical activity most days of the week.",
+        "image": "https://i.ibb.co.com/t8CmdNT/young-female-doctor.jpg"
+    },
+    {
+        "name": "Dr. Michael Lee",
+        "designation": "Nutritionist",
+        "advice": "Eat a balanced diet rich in fruits, vegetables, whole grains, and lean proteins to support overall health.",
+        "image": "https://i.ibb.co.com/fdg2288/doctor-with-his-arms-crossed-white-background.jpg"
+    },
+    {
+        "name": "Dr. Emily Davis",
+        "designation": "Dermatologist",
+        "advice": "Protect your skin by wearing sunscreen daily, even on cloudy days, to prevent sun damage.",
+        "image": "https://i.ibb.co.com/ySC69y8/female-doctor-hospital.jpg"
+    },
+    {
+        "name": "Dr. David Wilson",
+        "designation": "Endocrinologist",
+        "advice": "Monitor blood sugar levels regularly if you're diabetic and manage your diet to avoid complications.",
+        "image": "https://i.ibb.co.com/fdg2288/doctor-with-his-arms-crossed-white-background.jpg"
+    },
+    {
+        "name": "Dr. Olivia Martinez",
+        "designation": "Family Physician",
+        "advice": "Get regular check-ups and screenings to detect any potential health issues early.",
+        "image": "https://i.ibb.co.com/t8CmdNT/young-female-doctor.jpg"
+    },
+    {
+        "name": "Dr. James Patel",
+        "designation": "Pediatrician",
+        "advice": "Ensure your children receive their vaccinations on time to protect them from preventable diseases.",
+        "image": "https://i.ibb.co.com/fdg2288/doctor-with-his-arms-crossed-white-background.jpg"
+    },
+    {
+        "name": "Dr. Aisha Ahmed",
+        "designation": "Psychiatrist",
+        "advice": "Mental health is just as important as physical health. Practice mindfulness and seek support if you're feeling overwhelmed.",
+        "image": "https://i.ibb.co.com/rm6BHbz/Untitled-design.png"
+    },
+    {
+        "name": "Dr. John Thompson",
+        "designation": "Orthopedic Surgeon",
+        "advice": "Maintain bone health by including calcium and vitamin D in your diet, and stay physically active.",
+        "image": "https://i.ibb.co.com/fdg2288/doctor-with-his-arms-crossed-white-background.jpg"
+    },
+    {
+        "name": "Dr. Sophia Kim",
+        "designation": "Gynecologist",
+        "advice": "Regular gynecological exams are important for women’s health, including screenings for cervical and breast cancer.",
+        "image": "https://i.ibb.co.com/t8CmdNT/young-female-doctor.jpg"
+    },
+    {
+        "name": "Dr. Robert Brown",
+        "designation": "Pulmonologist",
+        "advice": "If you're a smoker, consider quitting. Smoking is the leading cause of lung disease and many other health issues.",
+        "image": "https://i.ibb.co.com/fdg2288/doctor-with-his-arms-crossed-white-background.jpg"
+    }
+]

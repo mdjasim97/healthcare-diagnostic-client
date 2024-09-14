@@ -1,53 +1,146 @@
 import { useQuery } from "@tanstack/react-query";
 import useAxiosSecure from "../../../../hooks/useAxiosSecure";
-import { Helmet } from 'react-helmet-async';
-import { FaTrashAlt } from "react-icons/fa";
 import { MdGroups } from 'react-icons/md';
-import Swal from "sweetalert2";
 import { useState } from "react";
+import useAuth from "../../../../hooks/useAuth";
+import { FaUser } from 'react-icons/fa';
+import Swal from 'sweetalert2'
 
 const AllUsers = () => {
 
     const axiosSecure = useAxiosSecure()
 
-    const { refetch, data: users = [] } = useQuery({
+
+    const { refetch, data: users = [], isLoading } = useQuery({
         queryKey: ['users'],
         queryFn: async () => {
-            const res = await axiosSecure.get('/users');
+            const res = await axiosSecure.get(`/users`);
             return res.data
         }
     })
 
-    const [status, setStaus] = useState('')
+    const [userRole, setuserRole] = useState('')
+    const [status, setStatus] = useState('')
+    const [allUser, setAllUser] = useState([])
 
-    const handleStatus = (e) => {
-        setStaus(e.target.value)
+    // make admin by only admin 
+    const userRoleUpdate = (e) => {
+        console.log(e.target.value)
+        setuserRole(e.target.value)
     }
 
-    console.log(status)
+    // const handleMakeAdmin = async (users) => {
+    //     document.getElementById('make_admin_modal').showModal()
+    //     const email = users?.email
+    //     console.log(email)
+    //     try {
+    //         const updateRole = {
+    //             role: userRole
+    //         }
 
-
-    // const userStatusControl = (user) => {
-    //     axiosSecure.patch(`/users/admin/${user._id}`)
-    //         .then(res => {
-    //             console.log(res.data)
-    //             if (res.data.modifiedCount > 0) {
+    //         await axiosSecure.put(`/users/role/${email}`, updateRole)
+    //             .then(result => {
     //                 refetch()
-    //                 Swal.fire({
-    //                     position: "top-end",
-    //                     icon: "success",
-    //                     title: `${user?.name} is ${user?.status} Now`,
-    //                     showConfirmButton: false,
-    //                     timer: 1500
-    //                 });
-    //             }
-    //         })
+    //                 console.log(result)
+    //             })
+
+    //     } catch (error) {
+    //         console.log(error.message)
+    //     }
     // }
+
+    const handleRoleModal = (user) => {
+        document.getElementById('make_admin_modal').showModal()
+        setAllUser(user)
+    }
+
+
+    const userRoleChange = async () => {
+        const email = allUser?.email
+
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You can not change next time!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+
+                try {
+                    const updateUser = {
+                        email: email,
+                        role: userRole,
+                        status : status
+                    }
+
+                    axiosSecure.put('/users/role', updateUser)
+                        .then(res => {
+                            refetch()
+                            console.log(res.data)
+                        })
+                } catch (error) {
+                    console.log(error)
+                }
+
+                // Swal.fire({
+                //     title: "Deleted!",
+                //     text: "Your file has been deleted.",
+                //     icon: "success"
+                // });
+            }
+        });
+
+    }
+
+
+
+    const handleModal = (user) => {
+        document.getElementById('my_modal_3').showModal()
+        setAllUser(user)
+    }
+
+    const userStatus = (e) => {
+        setStatus(e.target.value)
+    }
+
+    const userStatusUpdate = async () => {
+        const email = allUser?.email
+        try {
+            const updateUser = {
+                email: email,
+                status: status
+            }
+
+            await axiosSecure.put('/users', updateUser)
+                .then(res => {
+                    refetch()
+                    console.log(res.data)
+                })
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+
+    // see user infor funtions 
+    const seeUserInfoDetails = async (users) => {
+        document.getElementById('see_User_Details_Modal').showModal()
+        const email = users?.email
+        // console.log(email)
+
+        const res = await axiosSecure.get(`/users/${email}`)
+        console.log(res.data)
+        setAllUser(res.data)
+
+    }
 
     return (
         <div>
 
-            <div className='flex justify-evenly my-4'>
+            <div className='flex bg-orange-400 justify-evenly p-4'>
                 <h3 className="text-3xl">All Users</h3>
             </div>
 
@@ -56,8 +149,9 @@ const AllUsers = () => {
                     <table className="table table-zebra">
                         {/* head */}
                         <thead>
-                            <tr>
+                            <tr className="bg-orange-300 text-white">
                                 <th>SL</th>
+                                <th>Picture</th>
                                 <th>Name</th>
                                 <th>Email</th>
                                 <th>Role</th>
@@ -66,33 +160,112 @@ const AllUsers = () => {
                                 <th>Download</th>
                             </tr>
                         </thead>
+
                         <tbody>
                             {
-                                users.map((user, index) => <tr key={user._id}>
+                                users.map((users, index) => <tr key={users._id}>
                                     <th>{index + 1}</th>
-                                    <td>{user?.name}</td>
-                                    <td>{user?.email}</td>
+                                    <th>
+                                        <div className="mask mask-squircle h-12 w-12">
+                                            <FaUser className="text-2xl h-full" />
+                                        </div>
+                                    </th>
+                                    <td>{users?.name}</td>
+                                    <td>{users?.email}</td>
                                     <td>{
-                                        user.role === 'admin' ? "Admin" : <button onClick={() => handleMakeAdmin(user)} className='btn btn-ghost bg-orange-600'><MdGroups className='text-white text-2xl' /></button>
+                                        users.role === 'admin' ? <button className="btn">Admin</button> : <button className='btn' onClick={() => handleRoleModal(users)} >{users?.role}</button>
                                     }</td>
                                     <td>
-                                        <select onChange={handleStatus} className="select"> {user.status}
-                                            <option value='active'>Active</option>
-                                            <option value='block'>Block</option>
-                                        </select>
+                                        {users.role === 'admin' ? <button className="btn">Admin</button> : <button className='btn' onClick={() => handleModal(users)}>{users?.status}</button>}
                                     </td>
-                                    <td><button className='btn btn-ghost'>See Info</button></td>
+                                    <td><button onClick={() => seeUserInfoDetails(users)} className='btn'>See Info</button></td>
                                     <td><button className='btn btn-ghost'>Download</button></td>
                                 </tr>)
                             }
 
 
                         </tbody>
-                    </table>
-                </div>
-            </div>
 
-        </div>
+
+                        {/* make admin modal  */}
+                        <dialog id="make_admin_modal" className="modal">
+                            <div className="modal-box w-2/3">
+                                <select onChange={userRoleUpdate} className="select w-full max-w-xs">
+                                    <option default selected disabled >Change role</option>
+                                    <option value='admin'>Admin</option>
+                                </select>
+
+                                <div className="modal-action justify-between">
+                                    <form method="dialog">
+                                        <button onClick={userRoleChange} className="btn btn-sm bg-green-400">Change</button>
+                                    </form>
+
+                                    <form method="dialog">
+                                        <button className="btn btn-sm bg-red-400">Cancel</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </dialog>
+                        {/* make admin Modal  */}
+
+                        {/* status modal  */}
+                        <dialog id="my_modal_3" className="modal">
+                            <div className="modal-box w-2/12">
+
+                                <select onChange={userStatus} className="select w-full max-w-xs">
+                                    <option default selected disabled >Change Status</option>
+                                    <option defaultValue='active' value='active'>Active</option>
+                                    <option value='block'>Block</option>
+                                </select>
+
+                                <div className="modal-action justify-between">
+                                    <form method="dialog">
+                                        <button onClick={userStatusUpdate} className="btn btn-sm bg-green-400">Change</button>
+                                    </form>
+
+                                    <form method="dialog">
+                                        <button className="btn btn-sm bg-red-400">Cancel</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </dialog>
+                        {/* statis modal  */}
+
+                        {/* See User Details Modal  */}
+                        <dialog id="see_User_Details_Modal" className="modal">
+                            <div className="modal-box w-2/3">
+                                <div>
+                                    <h2 className="text-2xl font-semibold text-center">{allUser.name} Details</h2>
+                                    <hr className="h-1 bg-gray-400 my-2" />
+                                    <div className="flex justify-between">
+                                        <div className="space-y-3">
+                                            <h3>Name : {allUser.name}</h3>
+                                            <h3>Blood Group : {allUser.blood}</h3>
+                                            <p>Status : {allUser.status}</p>
+                                        </div>
+
+                                        <div className="space-y-3">
+                                            <p>Email : {allUser.email}</p>
+                                            <h3>Upzila : {allUser.upazila}</h3>
+                                            <p>Distric : {allUser.disctric}</p>
+                                        </div>
+                                    </div>
+                                    <div className="modal-action justify-center">
+                                        <form method="dialog">
+                                            <button className="btn bg-orange-600 w-64">Close</button>
+                                        </form>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </dialog>
+                        {/* See User Details Modal  */}
+
+                    </table >
+                </div >
+            </div >
+
+        </div >
     );
 };
 

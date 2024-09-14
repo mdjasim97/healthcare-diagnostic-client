@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2'
 import axios from 'axios'
 import useAuth from './../../hooks/useAuth';
@@ -12,8 +12,11 @@ const SignIn = () => {
     const navigate = useNavigate()
     const { user } = useAuth()
     const axiosPublic = useAxiosPublic()
+    const location = useLocation()
 
 
+    const from = location.state || '/';
+    console.log("state in the location", from)
 
 
     const handleSubmit = async (e) => {
@@ -25,26 +28,19 @@ const SignIn = () => {
         await userLogin(user_email, user_password)
             .then(result => {
                 console.log("User login successfull", result)
-                if (result?.user) {
-                    Swal.fire({
-                        title: "Successfull",
-                        text: "User login successfull.",
-                        icon: "success",
-                        showConfirmButton : false,
-                        timer : 1500
-                    });
-                }
-                navigate('/')
+                Swal.fire({
+                    title: "Successfull",
+                    text: "User login successfull.",
+                    icon: "success",
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+                navigate(from, { replace: true });
             })
             .catch(err => {
                 console.log(err)
             })
     }
-
-    const previousPage = () => {
-        navigate(-1)
-    }
-
 
     return (
         <div>

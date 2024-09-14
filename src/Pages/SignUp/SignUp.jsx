@@ -94,7 +94,6 @@ const SignUp = () => {
             }
 
         } else {
-            setPassError('Password not match')
             Swal.fire({
                 icon: "error",
                 title: "Password not match!",

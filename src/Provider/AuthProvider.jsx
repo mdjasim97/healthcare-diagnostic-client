@@ -7,18 +7,18 @@ export const AuthContext = createContext(null)
 const AuthProvider = ({ children }) => {
 
     const [user, setUser] = useState('');
-    const [loading, setloading] = useState(true);
+    const [loading, setLoading] = useState(true);
     const axiosPublic = useAxiosPublic()
 
     // user create with email and password 
     const userCreate = (email, password) => {
-        setloading(true)
+        setLoading(true)
         return createUserWithEmailAndPassword(auth, email, password)
     }
 
     // user  profile update
     const userProfileUpdate = (name, photo) => {
-        setloading(true)
+        setLoading(true)
         return updateProfile(auth.currentUser, {
             displayName: name,
             photoURL: photo
@@ -28,14 +28,14 @@ const AuthProvider = ({ children }) => {
 
     // user login
     const userLogin = (email, password) => {
-        setloading(true)
+        setLoading(true)
         return signInWithEmailAndPassword(auth, email, password)
     }
 
 
     // user logout
     const logOut = () => {
-        setloading(true)
+        setLoading(true)
         return signOut(auth)
     }
 
@@ -58,7 +58,7 @@ const AuthProvider = ({ children }) => {
             } else {
                 localStorage.removeItem('access-token')
             }
-
+            setLoading(false)
         })
 
         return () => {

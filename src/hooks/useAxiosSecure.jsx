@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import useAuth from './useAuth';
 
 const axiosSecure = axios.create({
-    baseURL: "http://localhost:5000"
+    baseURL: "https://healthcare-diagnostic-server.vercel.app"
 })
 
 const useAxiosSecure = () => {
@@ -31,7 +31,7 @@ const useAxiosSecure = () => {
             logOut()
             navigate('/login')
         }
-        console.log(error.toString())
+        console.log(error)
         return Promise.reject(error);
     })
 

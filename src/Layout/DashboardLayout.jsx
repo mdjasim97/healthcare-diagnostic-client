@@ -11,17 +11,17 @@ const DashboardLayout = () => {
 
     return (
         <div className='flex'>
-
             {/* Sidebar  */}
-            <div className="bg-slate-300 min-h-screen w-64">
+            <div className="bg-orange-200 min-h-screen w-64">
                 <ul className="menu">
-
                     {
                         isAdmin ?
                             <>
                                 <li><NavLink to="/dashboard/allUsers"> <FaUser /> All Users</NavLink></li>
                                 <li><NavLink to="/dashboard/addTest"> <FaUtensils /> Add New Test </NavLink></li>
                                 <li><NavLink to="/dashboard/addBannar"> <FaUtensils /> Update Bannar </NavLink></li>
+                                <li><NavLink to="/dashboard/allTest"> <FaUtensils /> All Test </NavLink></li>
+                                <li><NavLink to="/dashboard/reservation"> <FaUtensils /> Reservation </NavLink></li>
 
                             </> :
                             <>
@@ -37,7 +37,6 @@ const DashboardLayout = () => {
                     <li><NavLink to="/"> <FaHome /> Home </NavLink></li>
                 </ul>
             </div>
-
 
             <div className='flex-1'>
                 <Outlet></Outlet>
