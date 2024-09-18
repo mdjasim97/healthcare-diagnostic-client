@@ -1,17 +1,26 @@
 import { useQuery } from "@tanstack/react-query";
 import useAxiosSecure from "../../../../hooks/useAxiosSecure";
-import { MdGroups } from 'react-icons/md';
 import { useState } from "react";
-import useAuth from "../../../../hooks/useAuth";
 import { FaUser } from 'react-icons/fa';
 import Swal from 'sweetalert2'
+import { jsPDF } from "jspdf";
+import useAuth from "../../../../hooks/useAuth";
+import { FaFileDownload } from "react-icons/fa";
 
 const AllUsers = () => {
 
     const axiosSecure = useAxiosSecure()
+    const doc = new jsPDF();
 
 
-    const { refetch, data: users = [], isLoading } = useQuery({
+    const { user } = useAuth()
+    const [userRole, setuserRole] = useState('')
+    const [status, setStatus] = useState('')
+    const [allUser, setAllUser] = useState([])
+
+
+    // use for find all users 
+    const { refetch, data: users = [] } = useQuery({
         queryKey: ['users'],
         queryFn: async () => {
             const res = await axiosSecure.get(`/users`);
@@ -19,13 +28,22 @@ const AllUsers = () => {
         }
     })
 
-    const [userRole, setuserRole] = useState('')
-    const [status, setStatus] = useState('')
-    const [allUser, setAllUser] = useState([])
+    // user for specific user booking services 
+    const { data: booked = [], } = useQuery({
+        queryKey: ['booked'],
+        queryFn: async () => {
+            const res = await axiosSecure.get(`/myApponment/${user.email}`);
+            return res.data
+        }
+    })
+
+    console.log(booked)
+
+
 
     // make admin by only admin 
     const userRoleUpdate = (e) => {
-        console.log(e.target.value)
+        // console.log(e.target.value)
         setuserRole(e.target.value)
     }
 
@@ -73,7 +91,6 @@ const AllUsers = () => {
                     const updateUser = {
                         email: email,
                         role: userRole,
-                        status : status
                     }
 
                     axiosSecure.put('/users/role', updateUser)
@@ -108,13 +125,16 @@ const AllUsers = () => {
 
     const userStatusUpdate = async () => {
         const email = allUser?.email
+        // console.log(email)
         try {
             const updateUser = {
                 email: email,
                 status: status
             }
 
-            await axiosSecure.put('/users', updateUser)
+            console.log(updateUser)
+
+            await axiosSecure.put('/userInfo', updateUser)
                 .then(res => {
                     refetch()
                     console.log(res.data)
@@ -132,9 +152,31 @@ const AllUsers = () => {
         // console.log(email)
 
         const res = await axiosSecure.get(`/users/${email}`)
-        console.log(res.data)
+        // console.log(res.data)
         setAllUser(res.data)
 
+    }
+
+
+
+    // ==============================================================================
+    // ========================= download user details ==============================
+
+
+
+    const downloadUserDetails = () => {
+        const doc = new jsPDF()
+
+        users.forEach((userData, index) => {
+            doc.text(`Name : ${userData.name}`, 10, 10 + index * 10)
+            doc.text(`Email : ${userData.email}`, 10, 15 + index * 10)
+
+
+            // List all bookings
+            // booked.forEach((book))
+        });
+
+        doc.save("webpage-data.pdf");
     }
 
     return (
@@ -173,13 +215,13 @@ const AllUsers = () => {
                                     <td>{users?.name}</td>
                                     <td>{users?.email}</td>
                                     <td>{
-                                        users.role === 'admin' ? <button className="btn">Admin</button> : <button className='btn' onClick={() => handleRoleModal(users)} >{users?.role}</button>
+                                        users.role === 'admin' ? <button className="btn">Admin</button> : <button className={`btn ${users.role === 'user' && 'text-blue-500'}`} onClick={() => handleRoleModal(users)} >{users?.role}</button>
                                     }</td>
                                     <td>
-                                        {users.role === 'admin' ? <button className="btn">Admin</button> : <button className='btn' onClick={() => handleModal(users)}>{users?.status}</button>}
+                                        {users.role === 'admin' ? <button className="btn">Admin</button> : <button className={`btn`} onClick={() => handleModal(users)}>{users?.status}</button>}
                                     </td>
                                     <td><button onClick={() => seeUserInfoDetails(users)} className='btn'>See Info</button></td>
-                                    <td><button className='btn btn-ghost'>Download</button></td>
+                                    <td><button onClick={() => downloadUserDetails(users)} className='btn btn-ghost'><FaFileDownload className="text-orange-400" size={34}/></button></td>
                                 </tr>)
                             }
 
@@ -215,7 +257,7 @@ const AllUsers = () => {
                                 <select onChange={userStatus} className="select w-full max-w-xs">
                                     <option default selected disabled >Change Status</option>
                                     <option defaultValue='active' value='active'>Active</option>
-                                    <option value='block'>Block</option>
+                                    <option value='blocked'>Block</option>
                                 </select>
 
                                 <div className="modal-action justify-between">
@@ -252,7 +294,7 @@ const AllUsers = () => {
                                     </div>
                                     <div className="modal-action justify-center">
                                         <form method="dialog">
-                                            <button className="btn bg-orange-600 w-64">Close</button>
+                                            <button className="btn bg-orange-400 text-white w-64">Close</button>
                                         </form>
                                     </div>
 

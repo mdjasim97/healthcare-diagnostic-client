@@ -6,7 +6,7 @@ import SignUp from "../Pages/SignUp/SignUp";
 import SignIn from "../Pages/SignIn/SignIn";
 import DashboardLayout from "../Layout/DashboardLayout";
 import UserProfile from "../Pages/Dashboard/UserProfile/UserProfile";
-import Appoinment from "../Pages/Dashboard/Appoinment/Appoinment";
+import Appoinment from "../Pages/Dashboard/UserAppoinment/Appoinment";
 import TestResult from "../Pages/Dashboard/TestResult/TestResult";
 import AllUsers from "../Pages/Dashboard/AdminDashboard/AllUsers/AllUsers";
 import AddTest from "../Pages/Dashboard/AdminDashboard/AddTest/AddTest";
@@ -17,6 +17,8 @@ import ServicePage from "../Pages/ServicesPage/ServicePage";
 import AdminRoute from './AdminRoute';
 import PrivateRoute from "./PrivateRoute";
 import ServicesDetails from '../Pages/ServiceDetails/ServicesDetails';
+import UpdateTest from "../Pages/Dashboard/AdminDashboard/UpdateTest/UpdateTest";
+import AllBannar from "../Pages/Dashboard/AdminDashboard/AllBannar/AllBannar";
 
 const router = createBrowserRouter([
     {
@@ -28,7 +30,7 @@ const router = createBrowserRouter([
             {
                 path: "/",
                 element: <HomePage></HomePage>,
-                loader: () => fetch('https://healthcare-diagnostic-server.vercel.app/doctorTipes')
+                loader: () => fetch('http://localhost:5000/doctorTipes')
             },
             {
                 path: "signup",
@@ -46,8 +48,13 @@ const router = createBrowserRouter([
             {
                 path: 'services/:id',
                 element: <PrivateRoute><ServicesDetails /></PrivateRoute>,
-                loader: ({ params }) => fetch(`https://healthcare-diagnostic-server.vercel.app/alltest/${params.id}`)
-            }
+                loader: ({ params }) => fetch(`http://localhost:5000/alltest/${params.id}`)
+            },
+            {
+                path: 'updateTest/:id',
+                element: (<PrivateRoute><AdminRoute><UpdateTest /></AdminRoute></PrivateRoute>),
+                loader: ({ params }) => fetch(`http://localhost:5000/alltest/${params.id}`)
+            },
         ]
     },
     {
@@ -59,7 +66,7 @@ const router = createBrowserRouter([
                 element: <PrivateRoute><UserProfile /></PrivateRoute>
             },
             {
-                path: 'appoinment/:email',
+                path: 'appoinment',
                 element: <Appoinment />
             },
             {
@@ -77,6 +84,12 @@ const router = createBrowserRouter([
                         </AdminRoute>
                     </PrivateRoute>
             },
+
+            {
+                path: 'allBannar',
+                element: <PrivateRoute> <AdminRoute><AllBannar /></AdminRoute></PrivateRoute>
+            },
+
             {
                 path: 'allUsers',
                 element:
@@ -89,12 +102,13 @@ const router = createBrowserRouter([
             {
                 path: 'addTest',
                 element:
-                    <PrivateRoute>
+                    (<PrivateRoute>
                         <AdminRoute>
                             <AddTest />
                         </AdminRoute>
-                    </PrivateRoute>
+                    </PrivateRoute>)
             },
+
             {
                 path: 'allTest',
                 element: <PrivateRoute><AllTest /></PrivateRoute>

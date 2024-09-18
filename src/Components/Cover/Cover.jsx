@@ -1,10 +1,7 @@
 import { Parallax } from 'react-parallax';
-import coverImg from './../../assets/signup/wellcome.jpg'
 
-const Cover = ({ img, title }) => {
+const Cover = () => {
     return (
-
-
         <Parallax
             blur={{ min: -50, max: 50 }}
             bgImage="https://img.freepik.com/free-photo/hand-with-protective-gloves-holding-blood-samples-covid-test_23-2148958366.jpg?w=740&t=st=1726133110~exp=1726133710~hmac=f44edf6e8e75bc1ccf2d77645880ebc5a31e69118596e7484cc51a220e7c1986"
@@ -24,8 +21,6 @@ const Cover = ({ img, title }) => {
                 </div>
             </div>
         </Parallax>
-
-
     );
 };
 

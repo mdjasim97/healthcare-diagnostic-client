@@ -64,9 +64,11 @@ const Navbar = () => {
                             }
 
                         </ul>
+
                     </div>
+
                     {
-                        user && <Link to='/dashboard/allUsers' className="btn bg-orange-600 ml-2 text-white">Go to Dashboard</Link>
+                        user && <Link to='/dashboard/userProfile' className="btn bg-orange-600 ml-2 text-white">Go to Dashboard</Link>
                     }
                 </div>
             </div>

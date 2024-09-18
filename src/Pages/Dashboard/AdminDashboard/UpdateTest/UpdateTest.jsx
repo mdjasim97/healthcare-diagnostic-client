@@ -10,14 +10,18 @@ import { useState } from "react";
 import TimePicker from 'react-time-picker';
 import 'react-time-picker/dist/TimePicker.css';
 import 'react-clock/dist/Clock.css';
+import { useLoaderData } from "react-router-dom";
 
-const AddTest = () => {
+const UpdateTest = () => {
+    const testData = useLoaderData()
+
 
     const axiosSecure = useAxiosSecure()
     const [startDate, setStartDate] = useState(new Date())
     const [value, onChange] = useState('10:30');
 
-    const handleAddTest = async (e) => {
+
+    const handleUpdateTest = async (e) => {
         e.preventDefault()
         const form = e.target
         const test_name = form.name.value
@@ -26,10 +30,11 @@ const AddTest = () => {
         const date = startDate
         const image = form.image.files[0]
         const slots = form.slots.value;
+        const time = form.time.value
 
 
-        // const addtest = { test_name, test_desc, price, date, image, slots }
-        //  console.log(addtest)
+        // const updateTest = { test_name, test_desc, price, date, image, slots, time }
+        // console.log(updateTest)
 
         const formData = new FormData()
         formData.append('image', image)
@@ -39,33 +44,33 @@ const AddTest = () => {
             const { data } = await axios.post(`https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_IMGBB_API_KEY}`, formData)
             // console.log(data.data.display_url)
             // 4. user data store in database
-            const testData = {
+            const testUpdateData = {
                 name: test_name,
                 details: test_desc,
                 price: price,
                 image: data.data.display_url,
                 date: date,
                 slots: slots,
-                meet_time: value,
+                meet_time: time,
                 status: 'pending'
-
             }
 
             // console.log(testData)
 
 
-            await axiosSecure.post('/addTest', testData)
+            await axiosSecure.put(`/updateTest/${testData._id}`, testUpdateData)
                 .then(res => {
                     console.log(res.data)
+                    if (res.data.modifiedCount > 0) {
+                        Swal.fire({
+                            position: "top-end",
+                            icon: "success",
+                            title: "User Data has been saved",
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+                    }
                 })
-
-            Swal.fire({
-                position: "top-end",
-                icon: "success",
-                title: "User Data has been saved",
-                showConfirmButton: false,
-                timer: 1500
-            });
         } catch (error) {
             console.log(error)
         }
@@ -75,19 +80,19 @@ const AddTest = () => {
     return (
         <div>
             <SectionTitle
-                title="Add New Test"
+                title="Update Test"
             ></SectionTitle>
 
 
             <div className="m-8 bg-gray-200 p-10 rounded-lg">
-                <form onSubmit={handleAddTest}>
+                <form onSubmit={handleUpdateTest}>
 
                     <div>
                         <div className="form-control w-full">
                             <label className="label">
                                 <span className="label-text">Test Name*</span>
                             </label>
-                            <input type="text" placeholder="name" name="name" required className="input input-bordered w-full" />
+                            <input defaultValue={testData?.name} type="text" placeholder="Enter product name" name="name" required className="input input-bordered w-full" />
                         </div>
                     </div>
 
@@ -96,7 +101,7 @@ const AddTest = () => {
                         <label className="label">
                             <span className="label-text">Test Details</span>
                         </label>
-                        <textarea name="details" className="textarea textarea-bordered h-24" placeholder="Recepi details"></textarea>
+                        <textarea defaultValue={testData.details} name="details" className="textarea textarea-bordered h-24" placeholder="Recepi details"></textarea>
                     </div>
 
                     <div className="flex gap-6">
@@ -128,6 +133,7 @@ const AddTest = () => {
                             <input
                                 type="number"
                                 name="price"
+                                defaultValue={testData.price}
                                 placeholder="Price"
                                 className="input input-bordered w-full" />
                         </div>
@@ -145,7 +151,7 @@ const AddTest = () => {
                             <label className="label">
                                 <span className="label-text">Slots</span>
                             </label>
-                            <input type="text" name="slots" className="file-input w-full" />
+                            <input defaultValue={testData.slots} type="text" name="slots" className="file-input w-full" />
                         </div>
                     </div>
 
@@ -159,4 +165,4 @@ const AddTest = () => {
         </div>
     );
 };
-export default AddTest;
+export default UpdateTest;

@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2'
-import axios from 'axios'
 import useAuth from './../../hooks/useAuth';
 import useAxiosPublic from './../../hooks/useAxiosPublic';
 import signUp from '../../assets/signup/wellcome.jpg'
+import axios from 'axios';
+import { TbFidgetSpinner } from "react-icons/tb";
 
 const SignUp = () => {
 
@@ -13,22 +14,21 @@ const SignUp = () => {
     const [upazila, setUpazila] = useState(" ")
 
 
-    const { userCreate, userProfileUpdate, loading } = useAuth()
+    const { userCreate, userProfileUpdate } = useAuth()
     const navigate = useNavigate()
-    const { user } = useAuth()
+    const { user, loading, setLoading } = useAuth()
     const axiosPublic = useAxiosPublic()
 
 
     const selectBlood = (e) => {
-        console.log(e.target.value)
         setBlood(e.target.value)
     }
+
     const selectDistric = (e) => {
-        console.log(e.target.value)
         setDistric(e.target.value)
     }
+
     const selectUpazila = (e) => {
-        console.log(e.target.value)
         setUpazila(e.target.value)
     }
 
@@ -51,10 +51,12 @@ const SignUp = () => {
         if (user_password === user_confirmPassword) {
 
             try {
+                setLoading(true)
+
                 // 1. Upload image and get url
                 const { data } = await axios.post(`https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_IMGBB_API_KEY}`, formData)
-                console.log(data.data.display_url)
 
+                // console.log(data)
 
                 // 2. User create 
                 await userCreate(user_email, user_password)
@@ -68,20 +70,14 @@ const SignUp = () => {
                     email: user_email,
                     profile: user?.photoURL,
                     blood: blood_group,
-                    disctric: user_distric,
+                    distric: user_distric,
                     upazila: user_upazila,
                     status: 'active',
+                    role: 'user'
                 }
 
-                console.log(userInfoDoc)
-
-
-                await axiosPublic.put('/users', userInfoDoc)
-                    .then(res => {
-                        console.log(res.data)
-                    })
-
-                navigate('/')
+                // console.log(userInfoDoc)
+                await axiosPublic.put('/userInfo', userInfoDoc)
                 Swal.fire({
                     position: "top-end",
                     icon: "success",
@@ -89,8 +85,10 @@ const SignUp = () => {
                     showConfirmButton: false,
                     timer: 1500
                 });
+                navigate('/')
+
             } catch (error) {
-                console.log(error.message)
+                console.log(error)
             }
 
         } else {
@@ -103,10 +101,6 @@ const SignUp = () => {
     }
 
 
-    const previousPage = () => {
-        navigate(-1)
-    }
-
 
 
     return (
@@ -118,7 +112,7 @@ const SignUp = () => {
                     </div>
 
                     <div className="w-1/2">
-                        <h1 className="text-5xl text-center font-bold">SignUp</h1>
+                        <h1 className="text-5xl text-center font-bold">SignUp </h1>
                         <form onSubmit={handleSubmit} className="card-body">
 
                             {/* User name and Email related input  */}
@@ -237,7 +231,7 @@ const SignUp = () => {
                                 </div>
                             </div>
 
-                            <button className="btn bg-[#d1a054b3] my-6 text-xl text-white">SignUp</button>
+                            <button disabled={loading} className="btn bg-orange-500 my-6 text-xl text-white">  {loading?<TbFidgetSpinner className='m-1 text-white animate-spin' /> : <p>Sign Up</p>} </button>
 
                             <div className="form-control mt-6">
                                 <div className='text-[#d1a054b3] text-center text-xl space-y-1 mt-1'>

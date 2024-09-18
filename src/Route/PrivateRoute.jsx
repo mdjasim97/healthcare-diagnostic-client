@@ -4,7 +4,6 @@ import useAuth from './../hooks/useAuth';
 const PrivateRoute = ({ children }) => {
     const { user, loading } = useAuth()
     const location = useLocation()
-    const navigate = useNavigate()
 
     if (loading) {
         return <div className='min-h-screen flex flex-col justify-center items-center'>

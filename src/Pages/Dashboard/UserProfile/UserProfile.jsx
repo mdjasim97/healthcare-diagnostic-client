@@ -1,20 +1,11 @@
-import { useLoaderData } from 'react-router-dom'
+
 import useAuth from '../../../hooks/useAuth'
-// import { Helmet } from 'react-helmet-async'
-// import useRole from '../../../hooks/useRole'
-// import LoadingSpinner from '../../../components/Shared/LoadingSpinner'
 
 const UserProfile = () => {
-    const { user, loading } = useAuth() || {}
-    // const [role, isLoading] = useRole()
+    const { user} = useAuth() || {}
 
-    // console.log(user)
-    // if (isLoading || loading) return <LoadingSpinner />
     return (
         <div className='flex justify-center items-center h-screen'>
-            {/* <Helmet>
-                <title>Profile</title>
-            </Helmet> */}
             <div className='bg-white shadow-lg rounded-2xl w-3/5'>
                 <img
                     alt='profile'

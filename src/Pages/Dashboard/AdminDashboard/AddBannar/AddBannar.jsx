@@ -1,27 +1,25 @@
 
-import { useForm } from "react-hook-form";
-import { FaUtensils } from "react-icons/fa";
+
 import Swal from "sweetalert2";
-import useAxiosPublic from "../../../../hooks/useAxiosPublic";
-import useAxiosSecure from "../../../../hooks/useAxiosSecure";
 import SectionTitle from "../../../../Components/SectionTitle/SectionTitle";
 import axios from "axios";
+import useAxiosSecure from "../../../../hooks/useAxiosSecure"
 
 const AddBannar = () => {
 
-    const axiosPublic = useAxiosPublic()
     const axiosSecure = useAxiosSecure()
 
-    const handleAddTest = async (e) => {
+    const handleBannarContent = async (e) => {
         e.preventDefault()
         const form = e.target
-        const offer = form.offer.value
+        const discount = form.discount.value
         const offerTitle = form.offerTitle.value
         const description = form.description.value
         const image = form.image.files[0]
+        const couponCode = form.coupon.value;
 
 
-        const bannarContent = { offer, offerTitle, description, image }
+        const bannarContent = { discount, offerTitle, description, image, couponCode }
         console.log(bannarContent)
 
         const formData = new FormData()
@@ -33,19 +31,17 @@ const AddBannar = () => {
             console.log(data.data.display_url)
 
 
-
             // 4. user data store in database
             const bannarText = {
-                offer: offer,
+                discount: discount,
                 title: offerTitle,
                 description: description,
                 image: data.data.display_url,
+                couponCode: couponCode
             }
 
-            console.log(bannarText)
-
-
-            await axiosPublic.post('/addBannar', bannarText)
+            //  console.log(bannarText)
+            await axiosSecure.post('/addBannar', bannarText)
                 .then(res => {
                     console.log(res.data)
                 })
@@ -58,7 +54,7 @@ const AddBannar = () => {
                 timer: 1500
             });
         } catch (error) {
-            console.log(error.message)
+            console.log(error)
         }
 
     }
@@ -66,44 +62,60 @@ const AddBannar = () => {
     return (
         <div>
             <SectionTitle
-                title="Bannar Content Control"
+                title="Bannar Content"
             ></SectionTitle>
 
 
             <div className="m-8 bg-gray-200 p-10 rounded-lg">
-                <form onSubmit={handleAddTest}>
+                <form onSubmit={handleBannarContent}>
 
-                    <div>
+                    <div className="flex gap-6">
+                        {/* offer discount rate  */}
                         <div className="form-control w-full">
                             <label className="label">
-                                <span className="label-text">Offer</span>
+                                <span className="label-text">Discount %</span>
                             </label>
-                            <input type="text" placeholder="name" name="offer" required className="input input-bordered w-full" />
+                            <input type="number" placeholder="Type discount rate.." name="discount" required className="input input-bordered w-full" />
                         </div>
-                    </div>
 
-                    <div>
+                        {/* offer title  */}
                         <div className="form-control w-full">
                             <label className="label">
                                 <span className="label-text">Offer Title</span>
                             </label>
-                            <input type="text" placeholder="name" name="offerTitle" required className="input input-bordered w-full" />
+                            <input type="text" placeholder="New year, birthday, etc... " name="offerTitle" required className="input input-bordered w-full" />
                         </div>
                     </div>
 
-                    {/* recipe details */}
+                    {/* bannar text or descriptions  */}
                     <div className="form-control">
                         <label className="label">
-                            <span className="label-text">Description</span>
+                            <span className="label-text">Text</span>
                         </label>
-                        <textarea name="description" className="textarea textarea-bordered h-24" placeholder="Recepi details"></textarea>
+                        <textarea name="description" className="textarea textarea-bordered h-24" placeholder="Bannar discriptions or promotions text ..."></textarea>
                     </div>
 
-                    <div className="form-control w-full my-6">
-                        <input type="file" name="image" className="file-input w-full max-w-xs" />
+                    <div className="flex gap-6">
+                        {/* input bg image  */}
+                        <div className="form-control w-full ">
+                            <label className="label">
+                                <span className="label-text">Background Image</span>
+                            </label>
+                            <input type="file" name="image" className="file-input w-full max-w-xs" />
+                        </div>
+
+                        {/* Coupon code  */}
+                        <div className="form-control w-full">
+                            <label className="label">
+                                <span className="label-text">Coupon CODE</span>
+                            </label>
+                            <input type="text" placeholder="Type coupon code.. " name="coupon" required className="input input-bordered w-full" />
+                        </div>
                     </div>
 
-                    <button className="btn btn-ghost bg-slate-400 text-white">Continue</button>
+                    <div className="my-5 flex justify-center">
+                        <button className="btn btn-ghost lg:w-64 bg-orange-500 lg:text-2xl text-white">Continue & Add</button>
+                    </div>
                 </form>
             </div>
 

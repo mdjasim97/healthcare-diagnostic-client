@@ -1,22 +1,24 @@
-import { useState } from 'react';
+
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2'
-import axios from 'axios'
 import useAuth from './../../hooks/useAuth';
-import useAxiosPublic from './../../hooks/useAxiosPublic';
 import signUp from '../../assets/signup/wellcome.jpg'
+import { useEffect } from 'react';
 
 const SignIn = () => {
 
-    const { loading, userLogin } = useAuth()
+    const { user, userLogin, loading } = useAuth()
     const navigate = useNavigate()
-    const { user } = useAuth()
-    const axiosPublic = useAxiosPublic()
     const location = useLocation()
 
 
     const from = location.state || '/';
-    console.log("state in the location", from)
+
+    useEffect(() => {
+        if (user) {
+            navigate('/')
+        }
+    }, [user])
 
 
     const handleSubmit = async (e) => {
@@ -25,9 +27,9 @@ const SignIn = () => {
         const user_email = form.email.value
         const user_password = form.password.value;
 
-        await userLogin(user_email, user_password)
-            .then(result => {
-                console.log("User login successfull", result)
+        await userLogin (user_email, user_password)
+            .then(() => {
+                // console.log("User login successfull", result)
                 Swal.fire({
                     title: "Successfull",
                     text: "User login successfull.",
@@ -41,7 +43,6 @@ const SignIn = () => {
                 console.log(err)
             })
     }
-
     return (
         <div>
             <div className=" my-10">

@@ -1,8 +1,8 @@
-import React from 'react';
+
 import { Link } from 'react-router-dom';
 
 const FeatureCard = ({ featureCard }) => {
-    const { name, details, image, price, slots, status, date, _id } = featureCard
+    const { name, details, image, price, slots, date, _id } = featureCard
     return (
         <div>
             <div className="card m-2 lg:flex lg:flex-row card-compact bg-base-100 shadow-xl">

@@ -1,6 +1,5 @@
 import React from 'react';
 import SectionTitle from '../SectionTitle/SectionTitle';
-import ServiceCard from '../ServiceCard/ServiceCard';
 import useAxiosPublic from '../../hooks/useAxiosPublic';
 import { useQuery } from '@tanstack/react-query';
 import FeatureCard from '../FeaturedCard/FeatureCard';

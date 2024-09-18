@@ -4,18 +4,20 @@ import useAxiosPublic from "../../../../hooks/useAxiosPublic";
 import { Link } from "react-router-dom";
 
 
-const AllTest = () => {
+const AllBannar = () => {
 
     const axiosPublic = useAxiosPublic()
     const axiosSecure = useAxiosSecure()
 
-    const {data: test = [] } = useQuery({
-        queryKey: ['test'],
+    const {data: bannar = [] } = useQuery({
+        queryKey: ['bannar'],
         queryFn: async () => {
-            const res = await axiosPublic.get('/allTest');
+            const res = await axiosPublic.get('/allBannar');
             return res.data
         }
     })
+
+    console.log(bannar)
 
 
     const handleDeleteTest = (id) => {
@@ -27,7 +29,7 @@ const AllTest = () => {
     return (
         <div>
             <div className='flex justify-evenly my-4'>
-                <h3 className="text-3xl">All Test</h3>
+                <h3 className="text-3xl">All Bannar</h3>
             </div>
 
             <div>
@@ -45,7 +47,7 @@ const AllTest = () => {
                                 <th>Delete</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        {/* <tbody>
                             {
                                 test.map((test, index) => <tr key={test._id}>
 
@@ -65,7 +67,7 @@ const AllTest = () => {
                                     <td><button onClick={() => handleDeleteTest(test._id)} className='btn btn-ghost'>Delete</button></td>
                                 </tr>)
                             }
-                        </tbody>
+                        </tbody> */}
                     </table>
                 </div>
             </div>
@@ -74,4 +76,4 @@ const AllTest = () => {
     );
 };
 
-export default AllTest;
+export default AllBannar;

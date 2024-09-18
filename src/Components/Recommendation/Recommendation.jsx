@@ -10,7 +10,7 @@ import { useLoaderData } from 'react-router-dom';
 
 const Recommendation = () => {
     const loaderData = useLoaderData()
-    console.log(loaderData)
+    // console.log(loaderData)
 
     return (
         <div>
