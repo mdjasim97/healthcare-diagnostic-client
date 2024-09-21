@@ -76,7 +76,7 @@ const AllTest = () => {
                                     <th>{index + 1}</th>
                                     <th><img src={test?.image} alt="" className="w-16" /></th>
                                     <td>{test?.name}</td>
-                                    <td>{test?.price}</td>
+                                    <td>$ {test?.price}</td>
 
 
                                     <td>
