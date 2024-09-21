@@ -24,8 +24,7 @@ const Appoinment = () => {
         <div>
             <h2 className="text-5xl font-bold text-center bg-orange-300 py-5">Upcomming Test</h2>
             {
-                appoint.map(card => <UserAppoinment key={card._id} appoinmentCard={card} refetch={refetch}>
-
+                appoint.filter(meet => meet.status === 'pending').map(card => <UserAppoinment key={card._id} appoinmentCard={card} refetch={refetch}>
                 </UserAppoinment>)
             }
 

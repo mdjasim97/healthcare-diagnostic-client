@@ -22,14 +22,13 @@ const DashboardLayout = () => {
                                 <li><NavLink to="/dashboard/addBannar"> <FaUtensils /> Add Bannar </NavLink></li>
                                 <li><NavLink to='/dashboard/allBannar'> <FaUpload /> All Bannar </NavLink></li>
                                 <li><NavLink to="/dashboard/allTest"> <FaUtensils /> All Test </NavLink></li>
+                                <li><NavLink to="/dashboard/statistic"> <FaUtensils /> Statistic </NavLink></li>
                                 <li><NavLink to="/dashboard/reservation"> <FaUtensils /> Reservation </NavLink></li>
-
                             </> :
                             <>
                                 <li><NavLink to="/dashboard/userProfile"> <FaUser />My Profile </NavLink></li>
-                                <li><NavLink to="/dashboard/reservation"> <FaCalendar /> Reservation </NavLink></li>
                                 <li><NavLink to={`/dashboard/appoinment`}> <FaShoppingCart />My Upcomming Appoinment</NavLink></li>
-                                <li><NavLink to="/dashboard/testReult"> <FaListAlt /> Test Result</NavLink></li>
+                                <li><NavLink to="/dashboard/testResult"> <FaListAlt /> Test Result</NavLink></li>
                             </>
                     }
 

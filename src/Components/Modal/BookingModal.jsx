@@ -6,33 +6,60 @@ import {
     DialogPanel,
     DialogTitle,
 } from '@headlessui/react'
-import { Fragment, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import useAuth from '../../hooks/useAuth'
 import toast from 'react-hot-toast'
 import { Elements } from '@stripe/react-stripe-js'
 import CheckoutForm from '../../Pages/Dashboard/Checkout/CheckoutForm'
 import { loadStripe } from '@stripe/stripe-js'
+import useAxiosPublic from '../../hooks/useAxiosPublic'
+import { useQuery } from '@tanstack/react-query';
 
 
 
 
 const BookingModal = ({ closeModal, isOpen, testInfo }) => {
-
     const stripePromise = loadStripe(import.meta.env.VITE_STREP_PUBLISH_KEY)
-
     const { name, price } = (testInfo)
-    // console.log(testInfo)
     const { user } = useAuth()
 
-    const discountRate = 25
     const [discount, setDiscount] = useState(0)
     const [payable, setPayable] = useState(price)
     const [couponText, setCouponText] = useState('')
+    const [coupon, setCoupon] = useState()
+    const [discounRate, setDiscountRate] = useState()
+
+
+    const axiosPublic = useAxiosPublic()
+
+    const { data: getOffer = [] } = useQuery({
+        queryKey: ['getOffer'],
+        queryFn: async () => {
+            const res = await axiosPublic.get('/allBannar')
+            return res.data
+        }
+    })
+
+    console.log(getOffer)
+
+
+    useEffect(() => {
+        const activeOffer = getOffer.filter(item => item.isActive === 'true')
+        if (activeOffer.length > 0) {
+            const firstOffer = activeOffer[0];
+            setCoupon(firstOffer.couponCode);
+            setDiscountRate(firstOffer.discount);
+        }
+    }, [getOffer])
+
+
+
+    // console.log(coupon, discounRate)
 
 
     const applyCoupon = () => {
-        if (couponText == 'HEALTH_50') {
-            const discountPrice = (price * discountRate) / 100
+        if (couponText == coupon) {
+            const discountPrice = (price * parseFloat(discounRate)) / 100
             const payable = price - discountPrice
 
             setDiscount(discountPrice)
@@ -60,6 +87,7 @@ const BookingModal = ({ closeModal, isOpen, testInfo }) => {
                 >
                     <div className='fixed inset-0 bg-black bg-opacity-25' />
                 </TransitionChild>
+
 
                 <div className='fixed inset-0 overflow-y-auto'>
                     <div className='flex min-h-full items-center justify-center p-4 text-center'>

@@ -5,7 +5,7 @@ import Swal from 'sweetalert2'
 
 const UserAppoinment = ({ appoinmentCard, refetch }) => {
     console.log(appoinmentCard)
-    const { name, details, image, price, date, meet_time, _id } = appoinmentCard
+    const { name, details, image, price, date, meet_time, _id, status } = appoinmentCard
 
 
 
@@ -52,7 +52,7 @@ const UserAppoinment = ({ appoinmentCard, refetch }) => {
                 <div>
                     <div className='flex justify-between p-2 lg:p-4'>
                         <p><span className='font-bold'>Date : </span> {new Date(date).toLocaleDateString()}</p>
-                        <p> <span className='font-bold'>Status : </span> Pending</p>
+                        <p> <span className='font-bold'>Status : </span> {status}</p>
                         <p> <span className='font-bold'>Time : </span> {meet_time ? meet_time : '10:30 AM'}</p>
                     </div>
 
@@ -63,7 +63,7 @@ const UserAppoinment = ({ appoinmentCard, refetch }) => {
 
                     <div className='flex justify-between items-center'>
                         <p className='text-2xl'> <span className='text-2xl font-medium px-4'>Price :</span> ${price}</p>
-                        <button onClick={() => handleAppoinmentCancel(_id)} className="text-2xl btn bg-orange-300 text-orange-600">Cancel</button>
+                        {status === 'pending' ? <button onClick={() => handleAppoinmentCancel(_id)} className="text-2xl btn bg-orange-300 text-orange-600">Cancel</button> : <button className=' text-2xl font-bold p-2 bg-green-300 text-green-600'>Download</button>}
                         <Link to={`/services/${_id}`} className='btn bg-orange-500 m-4 text-white text-2xl'>View Details</Link>
                     </div>
                 </div>

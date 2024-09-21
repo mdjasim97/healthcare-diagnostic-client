@@ -6,16 +6,18 @@ import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
 import useAxiosSecure from './../../../hooks/useAxiosSecure';
 import useAuth from '../../../hooks/useAuth';
 import { ImSpinner9 } from 'react-icons/im';
+import { useNavigate } from 'react-router-dom';
 
 const CheckoutForm = ({ closeModal, paymentAmount, bookingInfo }) => {
     // console.log(paymentAmount)
-    // console.log(bookingInfo)
+    console.log(bookingInfo)
 
     const [clientSecret, setClientSecret] = useState("");
     const [cardError, setCardError] = useState("");
     const [processing, setProcessing] = useState(false);
     const axiosSecure = useAxiosSecure()
     const { user } = useAuth()
+    const navigate = useNavigate()
 
     // Option=1
 
@@ -100,17 +102,18 @@ const CheckoutForm = ({ closeModal, paymentAmount, bookingInfo }) => {
                 ...bookingInfo,
                 transaction_id: paymentIntent.id,
                 serviceId: bookingInfo._id,
-                date: new Date()
+                date: new Date(),
+                status: 'pending'
             }
             delete paymentInfo._id
             // console.log(paymentInfo)
 
             try {
+
+
                 // 2. save payment info in booking collection (db)
                 const { data } = await axiosSecure.post('/booking', paymentInfo)
                 console.log(data)
-
-                // 3. change slots status to booked in db
 
 
             } catch (error) {
@@ -118,6 +121,8 @@ const CheckoutForm = ({ closeModal, paymentAmount, bookingInfo }) => {
             }
 
             console.log(paymentInfo)
+            navigate('/')
+            
         }
 
         setProcessing(false)

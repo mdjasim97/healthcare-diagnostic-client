@@ -47,8 +47,8 @@ const AddTest = () => {
                 date: date,
                 slots: slots,
                 meet_time: value,
-                status: 'pending'
-
+                status: 'pending',
+                book_Count : 0
             }
 
             // console.log(testData)

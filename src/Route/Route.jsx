@@ -19,6 +19,7 @@ import PrivateRoute from "./PrivateRoute";
 import ServicesDetails from '../Pages/ServiceDetails/ServicesDetails';
 import UpdateTest from "../Pages/Dashboard/AdminDashboard/UpdateTest/UpdateTest";
 import AllBannar from "../Pages/Dashboard/AdminDashboard/AllBannar/AllBannar";
+import Statistics from "../Pages/Dashboard/AdminDashboard/Statistics/Statistics";
 
 const router = createBrowserRouter([
     {
@@ -30,7 +31,7 @@ const router = createBrowserRouter([
             {
                 path: "/",
                 element: <HomePage></HomePage>,
-                loader: () => fetch('http://localhost:5000/doctorTipes')
+                loader: () => fetch('https://healthcare-diagnostic-server.vercel.app/doctorTipes')
             },
             {
                 path: "signup",
@@ -48,12 +49,12 @@ const router = createBrowserRouter([
             {
                 path: 'services/:id',
                 element: <PrivateRoute><ServicesDetails /></PrivateRoute>,
-                loader: ({ params }) => fetch(`http://localhost:5000/alltest/${params.id}`)
+                loader: ({ params }) => fetch(`https://healthcare-diagnostic-server.vercel.app/alltest/${params.id}`)
             },
             {
                 path: 'updateTest/:id',
                 element: (<PrivateRoute><AdminRoute><UpdateTest /></AdminRoute></PrivateRoute>),
-                loader: ({ params }) => fetch(`http://localhost:5000/alltest/${params.id}`)
+                loader: ({ params }) => fetch(`https://healthcare-diagnostic-server.vercel.app/alltest/${params.id}`)
             },
         ]
     },
@@ -112,6 +113,10 @@ const router = createBrowserRouter([
             {
                 path: 'allTest',
                 element: <PrivateRoute><AllTest /></PrivateRoute>
+            },
+            {
+                path: 'statistic',
+                element: <PrivateRoute><Statistics /></PrivateRoute>
             },
             {
                 path: 'reservation',

@@ -4,22 +4,27 @@ import Swal from "sweetalert2";
 import SectionTitle from "../../../../Components/SectionTitle/SectionTitle";
 import axios from "axios";
 import useAxiosSecure from "../../../../hooks/useAxiosSecure"
+import useAuth from "../../../../hooks/useAuth";
+import { FaSpinner } from "react-icons/fa";
 
 const AddBannar = () => {
 
     const axiosSecure = useAxiosSecure()
+    const {loading} = useAuth()
 
-    const handleBannarContent = async (e) => {
+    const handleAddBannar = async (e) => {
         e.preventDefault()
         const form = e.target
-        const discount = form.discount.value
-        const offerTitle = form.offerTitle.value
+        const name = form.name.value;
+        const title = form.title.value;
         const description = form.description.value
         const image = form.image.files[0]
         const couponCode = form.coupon.value;
+        const discount = form.discount.value
 
 
-        const bannarContent = { discount, offerTitle, description, image, couponCode }
+
+        const bannarContent = { name, title, description, image, couponCode, discount }
         console.log(bannarContent)
 
         const formData = new FormData()
@@ -31,59 +36,61 @@ const AddBannar = () => {
             console.log(data.data.display_url)
 
 
-            // 4. user data store in database
-            const bannarText = {
-                discount: discount,
-                title: offerTitle,
+            // 2. user data store in database
+            const bannarInfo = {
+                name: name,
+                title: title,
                 description: description,
-                image: data.data.display_url,
-                couponCode: couponCode
+                couponCode: couponCode,
+                discount: discount,
+                isActive : false,
+                image: data.data.display_url
             }
 
             //  console.log(bannarText)
-            await axiosSecure.post('/addBannar', bannarText)
+            await axiosSecure.post('/addBannar', bannarInfo)
                 .then(res => {
                     console.log(res.data)
+                    if (res.data.insertedId) {
+                        Swal.fire({
+                            position: "top-end",
+                            icon: "success",
+                            title: "Data has been saved",
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+                    }
                 })
-
-            Swal.fire({
-                position: "top-end",
-                icon: "success",
-                title: "Data has been saved",
-                showConfirmButton: false,
-                timer: 1500
-            });
         } catch (error) {
             console.log(error)
         }
-
     }
 
     return (
         <div>
             <SectionTitle
-                title="Bannar Content"
+                title="Add Bannar"
             ></SectionTitle>
 
 
             <div className="m-8 bg-gray-200 p-10 rounded-lg">
-                <form onSubmit={handleBannarContent}>
+                <form onSubmit={handleAddBannar}>
 
                     <div className="flex gap-6">
                         {/* offer discount rate  */}
                         <div className="form-control w-full">
                             <label className="label">
-                                <span className="label-text">Discount %</span>
+                                <span className="label-text">Name</span>
                             </label>
-                            <input type="number" placeholder="Type discount rate.." name="discount" required className="input input-bordered w-full" />
+                            <input type="text" placeholder="Type Bannar name..." name="name" required className="input input-bordered w-full" />
                         </div>
 
                         {/* offer title  */}
                         <div className="form-control w-full">
                             <label className="label">
-                                <span className="label-text">Offer Title</span>
+                                <span className="label-text">Title</span>
                             </label>
-                            <input type="text" placeholder="New year, birthday, etc... " name="offerTitle" required className="input input-bordered w-full" />
+                            <input type="text" placeholder="Bannar title ..." name="title" required className="input input-bordered w-full" />
                         </div>
                     </div>
 
@@ -111,10 +118,20 @@ const AddBannar = () => {
                             </label>
                             <input type="text" placeholder="Type coupon code.. " name="coupon" required className="input input-bordered w-full" />
                         </div>
+
+                        {/* Coupon discount rate  */}
+                        <div className="form-control w-full">
+                            <label className="label">
+                                <span className="label-text">Coupon Discount Rate</span>
+                            </label>
+                            <input type="number" placeholder="Type discount %.. " name="discount" required className="input input-bordered w-full" />
+                        </div>
                     </div>
 
                     <div className="my-5 flex justify-center">
-                        <button className="btn btn-ghost lg:w-64 bg-orange-500 lg:text-2xl text-white">Continue & Add</button>
+                        <button disabled={loading} className="btn btn-ghost lg:w-64 bg-orange-500 lg:text-2xl text-white">{
+                            loading? <FaSpinner className="animate-spin mx-auto"/> : 'Add Bannar'
+                            }</button>
                     </div>
                 </form>
             </div>

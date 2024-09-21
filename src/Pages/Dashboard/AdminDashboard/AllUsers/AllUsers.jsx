@@ -169,7 +169,7 @@ const AllUsers = () => {
 
         users.forEach((userData, index) => {
             doc.text(`Name : ${userData.name}`, 10, 10 + index * 10)
-            doc.text(`Email : ${userData.email}`, 10, 15 + index * 10)
+            doc.text(`email : ${userData.email}`, 10, 15 + index * 10)
 
 
             // List all bookings

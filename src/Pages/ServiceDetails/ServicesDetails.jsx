@@ -8,7 +8,7 @@ const ServicesDetails = () => {
 
     const loadData = useLoaderData()
     // console.log(loadData)
-    const { image, name, details, price, slots, date, meet_time } = loadData
+    const { image, name, details, price, slots, date, meet_time, book_Count } = loadData
     const cuponCODE = 'HEALTH_50'
     const discountParcent = 50
 
@@ -51,6 +51,7 @@ const ServicesDetails = () => {
                             <p> <span className='font-bold'>Date </span> {new Date().toLocaleDateString()}</p>
                             <p> <span className='font-bold'>Time </span> {meet_time? meet_time : '10:30 AM'}</p>
                         </div>
+                        <p><span className='font-bold'>Total Booked : {book_Count}</span> </p>
 
                         <hr className='my-5 h-1' />
                         <button onClick={()=>setIsOpen(true)} className='btn bg-orange-500 text-white mx-20'>Book Now</button>
