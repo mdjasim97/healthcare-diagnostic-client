@@ -26,7 +26,7 @@ const ServicePage = () => {
 
     useEffect(() => {
         const getData = async () => {
-            const { data } = await axios.get(`https://healthcare-diagnostic-server.vercel.app/allTest?page=${currentPage}&size=${itemPerPage}`)
+            const { data } = await axios.get(`http://localhost:5000/allTest?page=${currentPage}&size=${itemPerPage}`)
             setAllTest(data)
         }
         getData()
@@ -38,7 +38,7 @@ const ServicePage = () => {
 
     useEffect(() => {
         const getCount = async () => {
-            const { data } = await axios.get(`https://healthcare-diagnostic-server.vercel.app/all-item`)
+            const { data } = await axios.get(`http://localhost:5000/all-item`)
             setCount(data.count)
         }
         getCount()

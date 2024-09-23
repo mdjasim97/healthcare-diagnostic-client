@@ -31,7 +31,7 @@ const router = createBrowserRouter([
             {
                 path: "/",
                 element: <HomePage></HomePage>,
-                loader: () => fetch('https://healthcare-diagnostic-server.vercel.app/doctorTipes')
+                loader: () => fetch('http://localhost:5000/doctorTipes')
             },
             {
                 path: "signup",
@@ -49,12 +49,12 @@ const router = createBrowserRouter([
             {
                 path: 'services/:id',
                 element: <PrivateRoute><ServicesDetails /></PrivateRoute>,
-                loader: ({ params }) => fetch(`https://healthcare-diagnostic-server.vercel.app/alltest/${params.id}`)
+                loader: ({ params }) => fetch(`http://localhost:5000/alltest/${params.id}`)
             },
             {
                 path: 'updateTest/:id',
                 element: (<PrivateRoute><AdminRoute><UpdateTest /></AdminRoute></PrivateRoute>),
-                loader: ({ params }) => fetch(`https://healthcare-diagnostic-server.vercel.app/alltest/${params.id}`)
+                loader: ({ params }) => fetch(`http://localhost:5000/alltest/${params.id}`)
             },
         ]
     },

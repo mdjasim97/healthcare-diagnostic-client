@@ -102,19 +102,16 @@ const CheckoutForm = ({ closeModal, paymentAmount, bookingInfo }) => {
                 ...bookingInfo,
                 transaction_id: paymentIntent.id,
                 serviceId: bookingInfo._id,
-                date: new Date(),
+                date: new Date().toLocaleDateString(),
                 status: 'pending'
             }
             delete paymentInfo._id
             // console.log(paymentInfo)
 
             try {
-
-
                 // 2. save payment info in booking collection (db)
                 const { data } = await axiosSecure.post('/booking', paymentInfo)
                 console.log(data)
-
 
             } catch (error) {
                 console.log(error)
@@ -122,7 +119,7 @@ const CheckoutForm = ({ closeModal, paymentAmount, bookingInfo }) => {
 
             console.log(paymentInfo)
             navigate('/')
-            
+
         }
 
         setProcessing(false)
